@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Helps boost tab volume",
   "main": "background.js",
-  "homepage": "https://githun.com/thewhodidthis/chrome-louder",
+  "homepage": "https://github.com/thewhodidthis/chrome-louder",
   "scripts": {
     "test": "eslint .",
     "prestart": "mkdir -p dist",

@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "Helps boost tab volume",
-  "homepage_url": "https://githun.com/thewhodidthis/chrome-louder",
+  "homepage_url": "https://github.com/thewhodidthis/chrome-louder",
   "minimum_chrome_version": "61",
   "icons": {
     "16": "assets/icon.png",
