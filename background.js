@@ -23,21 +23,18 @@ chrome.browserAction.onClicked.addListener(({ audible, id }) => {
 
   chrome.tabCapture.capture({ audio: true }, (stream) => {
     if (stream) {
+      chrome.browserAction.setIcon({ tabId: id, path: 'assets/icon-x.png' })
+
       const audio = new AudioContext()
 
       const input = audio.createMediaStreamSource(stream)
       const fader = audio.createGain()
 
+      fader.gain.setTargetAtTime(3.0, audio.currentTime + 0.25, 0.25)
+
       input.connect(fader)
       fader.connect(audio.destination)
 
-      // Boost volume
-      fader.gain.setTargetAtTime(3.0, audio.currentTime + 0.25, 0.25)
-
-      // Replace icon
-      chrome.browserAction.setIcon({ tabId: id, path: 'assets/icon-x.png' })
-
-      // Update locals
       Object.assign(louder, { audio, input, fader })
     } else {
       console.log(chrome.runtime.lastError)
