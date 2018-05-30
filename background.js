@@ -2,7 +2,7 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext
 
 const louder = {}
 
-chrome.browserAction.onClicked.addListener(({ audible, id }) => {
+chrome.browserAction.onClicked.addListener(({ audible }) => {
   // Skip if tab capture unavailable
   if (!audible) {
     return
@@ -11,7 +11,6 @@ chrome.browserAction.onClicked.addListener(({ audible, id }) => {
   if (louder.audio && louder.audio.state === 'running') {
     // Revert
     louder.fader.gain.setTargetAtTime(1.0, louder.audio.currentTime + 0.25, 0.5)
-    chrome.browserAction.setIcon({ tabId: id, path: 'assets/icon.png' })
 
     // Prep for next click
     louder.fader.disconnect()
@@ -23,8 +22,6 @@ chrome.browserAction.onClicked.addListener(({ audible, id }) => {
 
   chrome.tabCapture.capture({ audio: true }, (stream) => {
     if (stream) {
-      chrome.browserAction.setIcon({ tabId: id, path: 'assets/icon-x.png' })
-
       const audio = new AudioContext()
 
       const input = audio.createMediaStreamSource(stream)
@@ -41,3 +38,16 @@ chrome.browserAction.onClicked.addListener(({ audible, id }) => {
     }
   })
 })
+
+const handleIconChange = ({ status, tabId }) => {
+  const variant = status === 'active' ? 'x' : ''
+  const basename = variant.length ? `icon-${variant}` : 'icon'
+
+  chrome.browserAction.setIcon({ tabId, path: `assets/${basename}.png` })
+}
+
+chrome.tabCapture.getCapturedTabs((capturedTabs) => {
+  capturedTabs.forEach(handleIconChange)
+})
+
+chrome.tabCapture.onStatusChanged.addListener(handleIconChange)
